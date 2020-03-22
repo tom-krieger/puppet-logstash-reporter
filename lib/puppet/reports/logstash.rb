@@ -59,6 +59,7 @@ Puppet::Reports.register_report(:logstash) do
     end
 
     begin
+      Puppet.debug "writing tmp file for #{self.host}"
       filename = "/tmp/puppet-report-#{self.host}.json"
       fh = File.open(filename, 'w')
       fh.write(event.to_json)
