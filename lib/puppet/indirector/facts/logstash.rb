@@ -8,7 +8,7 @@ require 'socket'
 require 'pp'
 
 # Lidar Facts
-class Puppet::Node::Facts::Lidar < Puppet::Node::Facts::Yaml
+class Puppet::Node::Facts::Logstash < Puppet::Node::Facts::Yaml
 
   config_file = File.join([File.dirname(Puppet.settings[:config]), "logstash.yaml"])
   unless File.exist?(config_file)
@@ -19,7 +19,7 @@ class Puppet::Node::Facts::Lidar < Puppet::Node::Facts::Yaml
   desc 'Save facts to logstash and then to yamlcache.'
 
   def profile(message, metric_id, &block)
-    message = 'LiDAR: ' + message
+    message = 'Logstash: ' + message
     arity = Puppet::Util::Profiler.method(:profile).arity
     case arity
     when 1
@@ -33,16 +33,10 @@ class Puppet::Node::Facts::Lidar < Puppet::Node::Facts::Yaml
     # yaml cache goes first
     super(request)
 
-    profile('lidar_facts#save', [:lidar, :facts, :save, request.key]) do
+    profile('logstash_facts#save', [:lidar, :facts, :save, request.key]) do
       begin
-        Puppet.info 'Submitting facts to LiDAR'
+        Puppet.info 'Submitting facts to Logstash'
         current_time = Time.now
-        send_facts(request, current_time.clone.utc)
-      rescue StandardError => e
-        Puppet.err "Could not send facts to LiDAR: #{e}\n#{e.backtrace}"
-      end
-      begin
-        Puppet.info 'Submitting facts to logstash'
         Puppet.debug "writing tmp file for #{self.host}"
 
         facts = request.instance.dup
@@ -67,8 +61,8 @@ class Puppet::Node::Facts::Lidar < Puppet::Node::Facts::Yaml
           ls.puts json
           ls.close
         end
-      rescue Exception => e
-        Puppet.err("Failed to write to #{CONFIG[:host]} on port #{CONFIG[:port]}: #{e.message}")
+      rescue StandardError => e
+        Puppet.err "Could not send facts to Logstash: #{e}\n#{e.backtrace}"
       end
     end
   end
