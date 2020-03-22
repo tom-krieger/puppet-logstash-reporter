@@ -5,6 +5,7 @@ require 'timeout'
 require 'json'
 require 'yaml'
 require 'time'
+require 'pp'
 
 unless Puppet.version >= '2.6.5'
   fail "This report processor requires Puppet version 2.6.5 or later"
@@ -26,6 +27,7 @@ Puppet::Reports.register_report(:logstash) do
 
   def process
 
+    pp self
     validate_host(self.host)
 
     # Push all log lines as a single message

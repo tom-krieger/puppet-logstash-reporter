@@ -33,14 +33,20 @@ class logstash_reporter::params {
     $config_file = '/etc/puppetlabs/puppet/logstash.yaml'
     $config_owner = 'pe-puppet'
     $config_group = 'pe-puppet'
+    $update_ini = true
+    $reports = 'puppetdb,logstash'
   } elsif versioncmp($::puppetversion, '4.0.0') >= 0 {
     $config_file = '/etc/puppetlabs/puppet/logstash.yaml'
     $config_owner = 'puppet'
     $config_group = 'puppet'
+    $update_ini = false
+    $reports = 'puppetdb,logstash'
   } else {
     $config_file = '/etc/puppet/logstash.yaml'
     $config_owner = 'puppet'
     $config_group = 'puppet'
+    $update_ini = false
+    $reports = 'puppetdb,logstash'
   }
 
 }

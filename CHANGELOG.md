@@ -1,16 +1,16 @@
-##0.1.0( Jun 05, 2015 )
+## 0.1.0( Jun 05, 2015 )
 
-###Summary
+### Summary
 
 First official public release of the logstash reporter
 
-####Features
+#### Features
 
-####Bugfixes
+#### Bugfixes
 
-####Changes
+#### Changes
 
-####Testing changes
+#### Testing changes
 
-####Known bugs
+#### Known bugs
 

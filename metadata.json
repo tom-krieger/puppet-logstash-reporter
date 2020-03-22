@@ -1,11 +1,10 @@
 {
   "name": "elasticsearch-logstash_reporter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "source": "https://github.com/elastic/puppet-logstash-reporter",
   "author": "elasticsearch",
   "license": "Apache-2.0",
   "summary": "Install and configure Logstash reporter for Puppet",
-  "description": "Install and configure Logstash reporter for Puppet",
   "project_page": "https://github.com/elastic/puppet-logstash-reporter",
   "issues_url": "https://github.com/elastic/puppet-logtash-reporter/issues",
   "dependencies": [
