@@ -40,7 +40,7 @@ Puppet::Reports.register_report(:logstash) do
     event["host"] = self.host
     event["@timestamp"] = Time.now.utc.iso8601
     event["@version"] = 1
-    event["tags"] = ["puppet-#{self.kind}"]
+    event["tags"] = ["puppet-report"]
     event["message"] = "Puppet run on #{self.host} #{self.status}"
     event["logs"] = logs
     event["environment"] = self.environment

@@ -37,13 +37,13 @@
 # * Richard Pijnenburg <mailto:richard.pijnenburg@elastic.co>
 #
 class logstash_reporter (
-  String $logstash_host  = '127.0.0.1',
-  Integer $logstash_port = 5999,
-  String $config_file    = $::logstash_reporter::params::config_file,
-  String $config_owner   = $::logstash_reporter::params::config_owner,
-  String $config_group   = $::logstash_reporter::params::config_group,
-  Boolean$update_ini     = $::logstash_reporter::params::update_ini,
-  String $reports        = $logstash_reporter::params::reports,
+  String $logstash_host   = '127.0.0.1',
+  Integer $logstash_port  = 5999,
+  String $config_file     = $::logstash_reporter::params::config_file,
+  String $config_owner    = $::logstash_reporter::params::config_owner,
+  String $config_group    = $::logstash_reporter::params::config_group,
+  Boolean $update_ini     = $::logstash_reporter::params::update_ini,
+  String $reports         = $::logstash_reporter::params::reports,
 ) inherits logstash_reporter::params {
 
   file { $config_file:
