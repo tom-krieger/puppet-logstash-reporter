@@ -59,6 +59,11 @@ Puppet::Reports.register_report(:logstash) do
     end
 
     begin
+      filename = "/tmp/puppet-report-#{self.host}.json"
+      fh = File.open(filename, 'w')
+      fh.write(event.to_json)
+      fh.close()
+      
       Timeout::timeout(CONFIG[:timeout]) do
         json = event.to_json
         ls = TCPSocket.new "#{CONFIG[:host]}" , CONFIG[:port]
