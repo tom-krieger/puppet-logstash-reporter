@@ -33,7 +33,7 @@ class Puppet::Node::Facts::Logstash < Puppet::Node::Facts::Yaml
     # yaml cache goes first
     super(request)
 
-    profile('logstash_facts#save', [:lidar, :facts, :save, request.key]) do
+    profile('logstash_facts#save', [:logstash, :facts, :save, request.key]) do
       begin
         Puppet.info 'Submitting facts to Logstash'
         current_time = Time.now
@@ -50,17 +50,17 @@ class Puppet::Node::Facts::Logstash < Puppet::Node::Facts::Yaml
         event["tags"] = ["puppet-facts"]
         event["facts"] = facts
 
-        filename = "/tmp/puppet-report-#{self.host}.json"
+        filename = "/tmp/puppet-facts-#{self.host}.json"
         fh = File.open(filename, 'w')
         fh.write(event.to_json)
         fh.close()
         
-        Timeout::timeout(CONFIG[:timeout]) do
-          json = event.to_json
-          ls = TCPSocket.new "#{CONFIG[:host]}" , CONFIG[:port]
-          ls.puts json
-          ls.close
-        end
+        #Timeout::timeout(CONFIG[:timeout]) do
+        #  json = event.to_json
+        #  ls = TCPSocket.new "#{CONFIG[:host]}" , CONFIG[:port]
+        #  ls.puts json
+        #  ls.close
+        #end
       rescue StandardError => e
         Puppet.err "Could not send facts to Logstash: #{e}\n#{e.backtrace}"
       end

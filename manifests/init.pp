@@ -44,6 +44,7 @@ class logstash_reporter (
   String $config_group    = $::logstash_reporter::params::config_group,
   Boolean $update_ini     = $::logstash_reporter::params::update_ini,
   String $reports         = $::logstash_reporter::params::reports,
+  Boolean $manage_facts   = $::logstash_reporter::params::manage_facts,
 ) inherits logstash_reporter::params {
 
   file { $config_file:
@@ -75,6 +76,26 @@ class logstash_reporter (
 
     ini_setting { 'enable logstash reporting':
       * => $ini_data,
+    }
+  }
+
+  if $manage_facts {
+    file { '/etc/puppetlabs/puppet/logstash_routes.yaml':
+      ensure  => file,
+      owner   => pe-puppet,
+      group   => pe-puppet,
+      mode    => '0640',
+      content => epp('puppet-logstash-reporter/logstash_routes.yaml.epp', {facts_terminus => 'puppetdb',facts_cache_terminus => 'logstash'}),
+      notify  => Service['pe-puppetserver'],
+    }
+    ini_setting { 'enable logstash_routes.yaml':
+      ensure  => present,
+      path    => '/etc/puppetlabs/puppet/puppet.conf',
+      section => 'master',
+      setting => 'route_file',
+      value   => '/etc/puppetlabs/puppet/logstash_routes.yaml',
+      require => File['/etc/puppetlabs/puppet/logstash_routes.yaml'],
+      notify  => Service['pe-puppetserver'],
     }
   }
 
