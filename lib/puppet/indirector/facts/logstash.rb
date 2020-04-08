@@ -43,24 +43,20 @@ class Puppet::Node::Facts::Logstash < Puppet::Node::Facts::Yaml
         facts.values = facts.values.dup
         facts.values[:trusted] = get_trusted_info(request.node)
 
-        event = Hash.new
-        event["host"] = request.node
-        event["@timestamp"] = Time.now.utc.iso8601
-        event["@version"] = 1
-        event["tags"] = ["puppet-facts"]
-        event["facts"] = facts
+        Puppet.info 'sending facts to Logstash'
 
-        filename = "/tmp/puppet-facts-#{self.host}.json"
-        fh = File.open(filename, 'w')
-        fh.write(event.to_json)
-        fh.close()
-        
-        #Timeout::timeout(CONFIG[:timeout]) do
-        #  json = event.to_json
-        #  ls = TCPSocket.new "#{CONFIG[:host]}" , CONFIG[:port]
-        #  ls.puts json
-        #  ls.close
-        #end
+        facts.values = facts.values.dup
+        data = {}
+        data["@timestamp"] = time
+        data = data.merge(facts.values[:trusted])
+        data.delete('_@timestamp')
+      
+        Timeout::timeout(CONFIG[:timeout]) do
+          json = data.to_json
+          ls = TCPSocket.new "#{CONFIG[:factshost]}" , CONFIG[:factsport]
+          ls.puts json
+          ls.close
+        end
       rescue StandardError => e
         Puppet.err "Could not send facts to Logstash: #{e}\n#{e.backtrace}"
       end
@@ -72,5 +68,22 @@ class Puppet::Node::Facts::Logstash < Puppet::Node::Facts::Yaml
       Puppet::Context::TrustedInformation.local(node)
     end
     trusted.to_h
+  end
+
+  def send_facts_logstash(facts, time)
+
+    Puppet.info 'sending facts to Logstash'
+
+    facts.values = facts.values.dup
+    data = {}
+    data["@timestamp"] = time
+    data = data.merge(facts.values[:trusted])
+  
+    Timeout::timeout(1000) do
+      json = data.to_json
+      ls = TCPSocket.new "10.10.54.63" , 5998
+      ls.puts json
+      ls.close
+    end
   end
 end
