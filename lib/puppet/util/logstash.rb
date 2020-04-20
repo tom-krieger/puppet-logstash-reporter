@@ -50,18 +50,16 @@ module Puppet::Util::Logstash
     inventory = facts.values['_puppet_inventory_1']
     package_inventory = inventory['packages'] if inventory.respond_to?(:keys)
     facts.values.delete('_puppet_inventory_1')
-
-    Puppet.info 'sending facts to Logstash'
-
     facts.values = facts.values.dup
     data = {}
     data["@timestamp"] = time
     data = data.merge(facts.values[:trusted])
     server = logstash_fact_server
     port = logstash_fact_server_port
+    Puppet.info "sending facts to Logstash at #{server}:#{port}"
     Timeout::timeout(1000) do
       json = data.to_json
-      ls = TCPSocket.new server , port
+      ls = TCPSocket.new server, port
       ls.puts json
       ls.close
     end
