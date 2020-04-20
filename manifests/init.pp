@@ -55,7 +55,7 @@ class logstash_reporter (
     owner   => $config_owner,
     group   => $config_group,
     mode    => '0444',
-    content => template('puppet-logstash-reporter/logstash.yaml.erb'),
+    content => template('logstash_reporter/logstash.yaml.erb'),
   }
 
   $ini_default = {
@@ -88,7 +88,7 @@ class logstash_reporter (
       owner   => pe-puppet,
       group   => pe-puppet,
       mode    => '0640',
-      content => epp('puppet-logstash-reporter/logstash_routes.yaml.epp', {
+      content => epp('logstash_reporter/logstash_routes.yaml.epp', {
         facts_terminus       => 'puppetdb',
         facts_cache_terminus => 'logstash'
       }),
