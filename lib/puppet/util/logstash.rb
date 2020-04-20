@@ -51,7 +51,7 @@ module Puppet::Util::Logstash
     package_inventory = inventory['packages'] if inventory.respond_to?(:keys)
     facts.values.delete('_puppet_inventory_1')
     facts.values = facts.values.dup
-    fh = File.open("/tmp/#{facts.name}.json")
+    fh = File.open("/tmp/#{facts.name}.json", 'w')
     jdata = facts.values.to_json
     fh.write(jdata)
     fh.close()
