@@ -58,6 +58,13 @@ module Puppet::Util::Logstash
     data = {}
     data['@timestamp'] = time
     data['tags'] = ['puppet_facts']
+    data['certname'] = request.node
+    arr = request.node.split(".")
+    data['hostname'] = if arr.empty? || arr.nil?
+                         request.node
+                       else
+                         arr[0]
+                       end
     data.merge!(facts.values['security_baseline_summary'])
     server = logstash_fact_server
     port = logstash_fact_server_port
