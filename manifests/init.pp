@@ -88,7 +88,10 @@ class logstash_reporter (
       owner   => pe-puppet,
       group   => pe-puppet,
       mode    => '0640',
-      content => epp('puppet-logstash-reporter/logstash_routes.yaml.epp', {facts_terminus => 'puppetdb',facts_cache_terminus => 'logstash'}),
+      content => epp('puppet-logstash-reporter/logstash_routes.yaml.epp', {
+        facts_terminus       => 'puppetdb',
+        facts_cache_terminus => 'logstash'
+      }),
       notify  => Service['pe-puppetserver'],
     }
     ini_setting { 'enable logstash_routes.yaml':
