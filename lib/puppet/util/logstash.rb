@@ -51,15 +51,17 @@ module Puppet::Util::Logstash
     package_inventory = inventory['packages'] if inventory.respond_to?(:keys)
     facts.values.delete('_puppet_inventory_1')
     facts.values = facts.values.dup
-    fh = File.open("/tmp/#{request.node}.json")
+    fh = File.open("/tmp/#{facts.name}.json")
     jdata = facts.values.to_json
     fh.write(jdata)
     fh.close()
     data = {}
     data['@timestamp'] = time
+    data['key'] = request.key
+    data['environment'] = request.options[:environment] || request.environment.to_s
     data['tags'] = ['puppet_facts']
-    data['certname'] = request.node
-    arr = request.node.split(".")
+    data['certname'] = facts.name
+    arr = facts.name.split(".")
     data['hostname'] = if arr.empty? || arr.nil?
                          request.node
                        else

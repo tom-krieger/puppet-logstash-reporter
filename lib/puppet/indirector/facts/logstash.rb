@@ -26,7 +26,7 @@ class Puppet::Node::Facts::Logstash < Puppet::Node::Facts::Yaml
     # yaml cache goes first
     super(request)
 
-    # Puppet.info 'Logstash indirector save'
+    Puppet.info 'Logstash indirector save'
 
     profile('logstash_facts#save', [:logstash, :facts, :save, request.key]) do
       begin
