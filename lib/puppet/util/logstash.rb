@@ -54,7 +54,7 @@ module Puppet::Util::Logstash
     data = {}
     data['@timestamp'] = time
     data['tags'] = ['puppet_facts']
-    data.merge!(facts.values[:security_baseline_summary])
+    data.merge!(facts.values['security_baseline_summary'])
     server = logstash_fact_server
     port = logstash_fact_server_port
     Puppet.info "sending facts to Logstash at #{server}:#{port}"
