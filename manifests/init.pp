@@ -55,7 +55,7 @@ class logstash_reporter (
     owner   => $config_owner,
     group   => $config_group,
     mode    => '0444',
-    content => template('logstash_reporter/logstash.yaml.erb'),
+    content => template('puppet-logstash-reporter/logstash.yaml.erb'),
   }
 
   $ini_default = {
