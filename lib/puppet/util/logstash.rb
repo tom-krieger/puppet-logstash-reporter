@@ -52,8 +52,9 @@ module Puppet::Util::Logstash
     facts.values.delete('_puppet_inventory_1')
     facts.values = facts.values.dup
     data = {}
-    data["@timestamp"] = time
-    data = data.merge(facts.values)
+    data['@timestamp'] = time
+    data['tags'] = ['puppet_facts']
+    data.merge!(facts.values)
     server = logstash_fact_server
     port = logstash_fact_server_port
     Puppet.info "sending facts to Logstash at #{server}:#{port}"
@@ -63,6 +64,7 @@ module Puppet::Util::Logstash
       ls.puts json
       ls.close
     end
+    Puppet.info "finished sending facts to Logstash at #{server}:#{port}"
   end
 
 end
