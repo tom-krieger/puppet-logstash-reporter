@@ -48,6 +48,7 @@ class logstash_reporter (
   Boolean $update_ini          = $::logstash_reporter::params::update_ini,
   String $reports              = $::logstash_reporter::params::reports,
   Boolean $manage_facts        = $::logstash_reporter::params::manage_facts,
+  String $puppet_config        = $::logstash_reporter::params::puppet_config,
 ) inherits logstash_reporter::params {
 
   file { $config_file:
@@ -60,7 +61,7 @@ class logstash_reporter (
 
   $ini_default = {
     ensure  => present,
-    path    => $config_file,
+    path    => $puppet_config,
     section => 'master',
     setting => 'reports',
     value   => $reports,

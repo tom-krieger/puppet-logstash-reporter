@@ -36,6 +36,7 @@ class logstash_reporter::params {
     $update_ini = true
     $reports = 'puppetdb,logstash'
     $manage_facts = false
+    $puppet_config = '/etc/puppetlabs/puppet/puppet.conf'
   } elsif versioncmp($::puppetversion, '4.0.0') >= 0 {
     $config_file = '/etc/puppetlabs/puppet/logstash.yaml'
     $config_owner = 'puppet'
@@ -43,6 +44,7 @@ class logstash_reporter::params {
     $update_ini = false
     $reports = 'puppetdb,logstash'
     $manage_facts = false
+    $puppet_config = '/etc/puppetlabs/puppet/puppet.conf'
   } else {
     $config_file = '/etc/puppet/logstash.yaml'
     $config_owner = 'puppet'
@@ -50,6 +52,7 @@ class logstash_reporter::params {
     $update_ini = false
     $reports = 'puppetdb,logstash'
     $manage_facts = false
+    $puppet_config = '/etc/puppet/puppet.conf'
   }
 
 }
