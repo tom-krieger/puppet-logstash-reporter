@@ -55,27 +55,29 @@ module Puppet::Util::Logstash
     jdata = facts.values.to_json
     fh.write(jdata)
     fh.close()
-    data = {}
-    data['@timestamp'] = time
-    data['key'] = request.key
-    data['environment'] = request.options[:environment] || request.environment.to_s
-    data['tags'] = ['puppet_facts']
-    data['certname'] = facts.name
-    arr = facts.name.split(".")
-    data['hostname'] = if arr.empty? || arr.nil?
-                         request.node
-                       else
-                         arr[0]
-                       end
-    data.merge!(facts.values['security_baseline_summary'])
-    server = logstash_fact_server
-    port = logstash_fact_server_port
-    Puppet.info "sending facts to Logstash at #{server}:#{port}"
-    Timeout::timeout(1000) do
-      json = data.to_json
-      ls = TCPSocket.new server, port
-      ls.puts json
-      ls.close
+    if facts.values.key?('security_baseline_summary')
+      data = {}
+      data['@timestamp'] = time
+      data['key'] = request.key
+      data['environment'] = request.options[:environment] || request.environment.to_s
+      data['tags'] = ['puppet_facts']
+      data['certname'] = facts.name
+      arr = facts.name.split(".")
+      data['hostname'] = if arr.empty? || arr.nil?
+                          request.node
+                        else
+                          arr[0]
+                        end
+      data.merge!(facts.values['security_baseline_summary'])
+      server = logstash_fact_server
+      port = logstash_fact_server_port
+      Puppet.info "sending facts to Logstash at #{server}:#{port}"
+      Timeout::timeout(1000) do
+        json = data.to_json
+        ls = TCPSocket.new server, port
+        ls.puts json
+        ls.close
+      end
     end
     Puppet.info "finished sending facts to Logstash at #{server}:#{port}"
   end
