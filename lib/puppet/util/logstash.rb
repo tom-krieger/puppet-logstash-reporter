@@ -79,8 +79,7 @@ module Puppet::Util::Logstash
         ls.puts json
         ls.close
       end
+      Puppet.info "finished sending facts to Logstash at #{server}:#{port}"
     end
-    Puppet.info "finished sending facts to Logstash at #{server}:#{port}"
   end
-
 end
