@@ -42,6 +42,7 @@ class logstash_reporter (
   String $logstash_facts_host  = '127.0.0.1',
   Integer $logstash_facts_port = 5998,
   Integer $timeout             = 1000,
+  Boolean $logstash_config     = false,
   String $config_file          = $::logstash_reporter::params::config_file,
   String $config_owner         = $::logstash_reporter::params::config_owner,
   String $config_group         = $::logstash_reporter::params::config_group,
@@ -51,12 +52,14 @@ class logstash_reporter (
   String $puppet_config        = $::logstash_reporter::params::puppet_config,
 ) inherits logstash_reporter::params {
 
-  file { $config_file:
-    ensure  => file,
-    owner   => $config_owner,
-    group   => $config_group,
-    mode    => '0444',
-    content => template('logstash_reporter/logstash.yaml.erb'),
+  if $logstash_config {
+    file { $config_file:
+      ensure  => file,
+      owner   => $config_owner,
+      group   => $config_group,
+      mode    => '0444',
+      content => template('logstash_reporter/logstash.yaml.erb'),
+    }
   }
 
   $ini_default = {
